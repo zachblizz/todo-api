@@ -9,28 +9,28 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/v1/todo-mdb")
+@RequestMapping("/api/v1/todos")
 public class TodoCtrl {
     @Autowired
-    TodoSvc svc;
+    TodoSvc todoSvc;
 
     @GetMapping
-    public List<Todo> getTodos() {
-        return svc.getAllTodos();
+    public List<Todo> getAllTodos() {
+        return todoSvc.getAllTodos();
     }
 
     @PutMapping
     public List<Todo> addTodo(@RequestBody Todo todo) {
-        return svc.saveTodo(todo);
+        return todoSvc.saveTodo(todo);
     }
 
     @PatchMapping("/{id}")
     public List<Todo> updateTodo(@PathVariable String id, @RequestBody Todo todo) {
-        return svc.updateTodo(id, todo);
+        return todoSvc.updateTodo(id, todo);
     }
 
     @DeleteMapping("/{id}")
     public List<Todo> deleteTodo(@PathVariable String id) {
-        return svc.deleteTodo(id);
+        return todoSvc.deleteTodo(id);
     }
 }

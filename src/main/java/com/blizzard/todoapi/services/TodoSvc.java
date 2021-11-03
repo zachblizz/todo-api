@@ -17,10 +17,6 @@ public class TodoSvc {
         return todoRepo.findAll();
     }
 
-    public Optional<Todo> getTodoById(String id) {
-        return todoRepo.findById(id);
-    }
-
     public List<Todo> saveTodo(Todo todo) {
         todoRepo.save(todo);
         return todoRepo.findAll();
