@@ -38,11 +38,11 @@ public class TodoCtrlUnitTests {
     @Autowired
     ObjectMapper objectMapper;
 
-    private List<Todo> list = new ArrayList<>(Arrays.asList(new Todo("first")));
 
     @Test
     public void testGetTodos() throws Exception {
-        String expected = "[{\"id\":null,\"task\":\"first\",\"done\":false}]";
+        List<Todo> list = new ArrayList<>(Arrays.asList(new Todo("first")));
+        String expected = objectMapper.writeValueAsString(list);
 
         when(todoSvc.getAllTodos()).thenReturn(list);
         mockMvc.perform(get("/api/v1/todos")).andDo(print())
@@ -52,14 +52,14 @@ public class TodoCtrlUnitTests {
 
     @Test
     public void testAddTodo() throws Exception {
-        String expected = "[{\"id\":null,\"task\":\"first\",\"done\":false},{\"id\":null,\"task\":\"this is it\",\"done\":false}]";
-        Todo tmpTodo = new Todo("this is it");
-        list.add(tmpTodo);
+        Todo todo = new Todo("second");
+        List<Todo> list = new ArrayList<>(Arrays.asList(new Todo("first"), todo));
+        String expected = objectMapper.writeValueAsString(list);
 
         when(todoSvc.saveTodo(any(Todo.class))).thenReturn(list);
 
         MockHttpServletRequestBuilder request = put("/api/v1/todos")
-                .content(objectMapper.writeValueAsString(tmpTodo))
+                .content(objectMapper.writeValueAsString(todo))
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request).andDo(print())
