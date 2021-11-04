@@ -88,7 +88,7 @@ public class TodoCtrlUnitTests {
         List<Todo> value = new ArrayList<>();
         String expected = objectMapper.writeValueAsString(value);
 
-        when(todoSvc.deleteTodo(anyString())).thenReturn(new ArrayList<>());
+        when(todoSvc.deleteTodo(anyString())).thenReturn(value);
         MockHttpServletRequestBuilder request = delete("/api/v1/todos/{id}", "1")
                 .contentType(MediaType.APPLICATION_JSON);
 

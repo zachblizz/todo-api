@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,14 +24,18 @@ public class TodoSvc {
     }
 
     public List<Todo> updateTodo(String id, Todo todo) {
-        Todo tmp = todoRepo.findById(id).get();
+        try {
+            Todo tmp = todoRepo.findById(id).get();
 
-        if (tmp != null) {
-            tmp.setTask(todo.getTask());
-            tmp.setDone(todo.isDone());
+            if (tmp != null) {
+                tmp.setTask(todo.getTask());
+                tmp.setDone(todo.isDone());
+
+                todoRepo.save(tmp);
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println("No such element");
         }
-
-        todoRepo.save(tmp);
 
         return todoRepo.findAll();
     }
