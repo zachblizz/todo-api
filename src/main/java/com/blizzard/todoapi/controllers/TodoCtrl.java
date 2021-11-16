@@ -19,14 +19,9 @@ public class TodoCtrl {
         return todoSvc.getAllTodos();
     }
 
-    @PutMapping
+    @PostMapping
     public List<Todo> addTodo(@RequestBody Todo todo) {
-        return todoSvc.saveTodo(todo);
-    }
-
-    @PatchMapping("/{id}")
-    public List<Todo> updateTodo(@PathVariable String id, @RequestBody Todo todo) {
-        return todoSvc.updateTodo(id, todo);
+        return todoSvc.saveAndUpdateTodo(todo);
     }
 
     @DeleteMapping("/{id}")

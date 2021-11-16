@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -56,7 +56,7 @@ public class TodoCtrlUnitTests {
         List<Todo> list = new ArrayList<>(Arrays.asList(new Todo("first"), todo));
         String expected = objectMapper.writeValueAsString(list);
 
-        when(todoSvc.saveTodo(any(Todo.class))).thenReturn(list);
+        when(todoSvc.saveAndUpdateTodo(any(Todo.class))).thenReturn(list);
 
         MockHttpServletRequestBuilder request = put("/api/v1/todos")
                 .content(objectMapper.writeValueAsString(todo))
@@ -72,15 +72,17 @@ public class TodoCtrlUnitTests {
         Todo todo = new Todo("updated");
         List<Todo> first = new ArrayList<>(Arrays.asList(todo));
         String expected = objectMapper.writeValueAsString(first);
+        String id = "1";
 
-        when(todoSvc.updateTodo(anyString(), any(Todo.class))).thenReturn(first);
-        MockHttpServletRequestBuilder request = patch("/api/v1/todos/{id}", "1")
+        when(todoSvc.saveAndUpdateTodo(any(Todo.class))).thenReturn(first);
+        MockHttpServletRequestBuilder request = patch("/api/v1/todos/{id}", id)
                 .content(objectMapper.writeValueAsString(todo))
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(expected));
+        verify(todoSvc).saveAndUpdateTodo(eq(todo));
     }
 
     @Test

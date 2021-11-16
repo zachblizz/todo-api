@@ -8,10 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -36,34 +33,15 @@ public class TodoSvcUnitTests {
     }
 
     @Test
-    public void saveTodo() {
+    public void saveAndUpdateTodoTest() {
         Todo newTodo = new Todo("second");
         List<Todo> expected = new ArrayList<>(Arrays.asList(new Todo("test"), newTodo));
 
         when(todoRepository.findAll()).thenReturn(expected);
-        List<Todo> actual = todoSvc.saveTodo(newTodo);
+        List<Todo> actual = todoSvc.saveAndUpdateTodo(newTodo);
 
         assertEquals(expected, actual);
-        verify(todoRepository).save(newTodo);
-        verify(todoRepository).findAll();
-    }
-
-    @Test
-    public void updateTodoTest() {
-        Todo newTodo = new Todo("second");
-        newTodo.setDone(true);
-        String id = "1";
-
-        List<Todo> expected = new ArrayList<>(Arrays.asList(new Todo("test"), newTodo));
-
-        when(todoRepository.findById(id)).thenReturn(Optional.of(newTodo));
-        when(todoRepository.findAll()).thenReturn(expected);
-
-        List<Todo> actual = todoSvc.updateTodo(id, newTodo);
-
-        assertEquals(expected, actual);
-        verify(todoRepository).findById(id);
-        verify(todoRepository).save(newTodo);
+        verify(todoRepository).save(eq(newTodo));
         verify(todoRepository).findAll();
     }
 
@@ -78,5 +56,10 @@ public class TodoSvcUnitTests {
 
         assertEquals(expected, actual);
         verify(todoRepository).deleteById(id);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void deleteTodoNullIDTest() {
+        todoSvc.deleteTodo(null);
     }
 }
